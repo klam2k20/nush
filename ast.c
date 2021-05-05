@@ -151,7 +151,7 @@ evaluate_cmd(ast* aa)
             args[ii] = aa->args->data[ii];
         }
         args[size] = 0;
-            execvp(args[0], args);
+        execvp(args[0], args);
     }    
 }
 
@@ -162,13 +162,15 @@ evaluate_redin(ast* aa, hashmap* hh)
 {
     int cpid, rv;
     char* file = aa->right->args->data[0];
-    if ((cpid = fork())) {
+    if ((cpid = fork())) 
+    {
         check_syscall(cpid);
         int status;
         waitpid(cpid, &status, 0);
     }
 
-    else {
+    else 
+    {
         int fd = open(file, O_RDONLY, 0444);
         check_syscall(fd);
         rv = close(0);
@@ -244,6 +246,7 @@ evaluate_pipe(ast* aa, hashmap* hh)
             check_syscall(rv);
             rv = dup(p_read);
             check_syscall(rv);
+            close(p_read);
             evaluate_ast(aa->right, hh);
             _exit(0);
         }
@@ -255,6 +258,7 @@ evaluate_pipe(ast* aa, hashmap* hh)
             check_syscall(rv);
             rv  = dup(p_write);
             check_syscall(rv);
+            close(p_write);
             evaluate_ast(aa->left, hh);
             _exit(0);
         }
@@ -397,8 +401,6 @@ evaluate_ast(ast* aa, hashmap* hh)
     else if(strcmp(aa->op, "=") == 0)
     {
         hashmap_put(hh, aa->left->args->data[0], aa->right->args->data[0]);
-        //printf("hashmap pushed");
-        //printf("hashmap values pushed: %s, %s\n", aa->left->args->data[0], hashmap_get(hh, aa->left->args->data[0]));
     }     
     
     else 
