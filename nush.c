@@ -124,7 +124,8 @@ main(int argc, char* argv[])
     char* line;
     while(1)
     {
-        if (argc == 1) {
+        if (argc == 1) 
+        {
             printf("nush$ ");
             fflush(stdout);
             line = fgets(cmd, 256, stdin);
@@ -133,7 +134,7 @@ main(int argc, char* argv[])
             line = fgets(cmd, 256, file);
         }
      
-        if(line == NULL)
+        if(!line)
         {
             // File was given 
             if (argc > 1)
@@ -155,7 +156,6 @@ main(int argc, char* argv[])
         
         if(tokens->size > 0)
         {
-           // print_ast(aa);
             evaluate_ast(aa, hh);
             free_ast(aa);
             free_svec(tokens);
